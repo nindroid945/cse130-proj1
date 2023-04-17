@@ -29,8 +29,8 @@ void read_from_file(char *filename) {
 }
 
 int main(int argc, char *argv[]) {
-  if (argc == 1 ||
-      strcmp(argv[1], "-") == 0) {  // no args, should read from stdin
+  if (argc == 1 || (argc == 1 && strcmp(argv[1], "-") ==
+                                     0)) {  // no args, should read from stdin
     read_from_stdin();
     return 0;
   } else {  // one or more args
