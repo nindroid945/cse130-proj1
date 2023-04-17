@@ -9,7 +9,7 @@
 
 void read_from_stdin() {
   char buffer[BUFSIZE];
-  while (read(STDIN_FILENO, buffer, sizeof(BUFSIZE)) > 0) {
+  while (read(STDIN_FILENO, buffer, BUFSIZE) > 0) {
     printf("%s", buffer);
   }
 }
@@ -23,9 +23,9 @@ void read_from_file(char *filename) {
     warn("%s", filename);
     // exit(1);
   }
-  sz = read(fd, c, 5000);
+  sz = read(fd, c, BUFSIZE);
   c[sz] = '\0';
-  write(STDOUT_FILENO, c, 5000);
+  write(STDOUT_FILENO, c, BUFSIZE);
 }
 
 int main(int argc, char *argv[]) {
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     for (i = 1; i < argc; i++) {
       if (strcmp(argv[i], "-") == 0) {  // wait for eof
         char buffer[BUFSIZE];
-        while (read(STDIN_FILENO, buffer, sizeof(BUFSIZE)) <= 0) {
+        while (read(STDIN_FILENO, buffer, BUFSIZE) <= 0) {
           i++;
           break;
         }
