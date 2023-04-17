@@ -9,7 +9,7 @@
 
 void read_from_stdin() {
   char buffer[BUFSIZE];
-  while (read(STDIN_FILENO, buffer, 1) > 0) {
+  while (read(STDIN_FILENO, buffer, sizeof(BUFSIZE)) > 0) {
     printf("%s", buffer);
   }
 }
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     for (i = 1; i < argc; i++) {
       if (strcmp(argv[i], "-") == 0) {  // wait for eof
         char buffer[BUFSIZE];
-        while (read(STDIN_FILENO, buffer, 1) <= 0) {
+        while (read(STDIN_FILENO, buffer, sizeof(BUFSIZE)) <= 0) {
           i++;
           break;
         }
