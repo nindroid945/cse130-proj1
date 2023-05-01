@@ -12,25 +12,42 @@ void read_from_stdin() {
   while (read(STDIN_FILENO, buffer, BUFSIZE) > 0) {
     printf("%s", buffer);
   }
+  if (read(STDIN_FILENO, buffer, BUFSIZE) < 0){
+    warn("%s", buffer);
+  }
 }
 
-void read_from_file(char *filename) {
+int read_from_file(char *filename, bool check) {
   int fd, sz;
   char c[BUFSIZE] = "";
 
   fd = open(filename, O_RDONLY);
   if (fd < 0) {
     warn("%s", filename);
-    // exit(1);
+    return 0;
+    //exit(1);
   }
   sz = read(fd, c, BUFSIZE);
+  if (sz < 0) {
+    warn("%s", filename);
+    return 0;
+  }
   c[sz] = '\0';
-  write(STDOUT_FILENO, c, BUFSIZE);
+  int wr = write(STDOUT_FILENO, c, BUFSIZE);
+  if(wr < 0){
+    warn("%s", filename);
+    return 0;
+  }
+  if(!check){
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 int main(int argc, char *argv[]) {
-  if (argc == 1 || (argc == 1 && strcmp(argv[1], "-") ==
-                                     0)) {  // no args, should read from stdin
+  bool success = 1;
+  if (argc == 1 || (strcmp(argv[1], "-") == 0)) {  // no args, should read from stdin
     read_from_stdin();
     return 0;
   } else {  // one or more args
@@ -38,14 +55,23 @@ int main(int argc, char *argv[]) {
     for (i = 1; i < argc; i++) {
       if (strcmp(argv[i], "-") == 0) {  // wait for eof
         char buffer[BUFSIZE];
-        while (read(STDIN_FILENO, buffer, BUFSIZE) <= 0) {
+        int rd = read(STDIN_FILENO, buffer, BUFSIZE);
+        if (rd < 0) {
+          warn("%s", argv[i]);
+          return 0;
+        }
+        while (rd <= 0) {
           i++;
           break;
         }
         printf("%s", buffer);
+      } else {
+        success = read_from_file(argv[i], success);
       }
-      read_from_file(argv[i]);
     }
   }
-  return EXIT_SUCCESS;
+  if(success == 1){
+    return EXIT_SUCCESS;
+  }
+  return EXIT_FAILURE;
 }
