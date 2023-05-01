@@ -12,7 +12,7 @@ void read_from_stdin() {
   while (read(STDIN_FILENO, buffer, BUFSIZE) > 0) {
     printf("%s", buffer);
   }
-  if (read(STDIN_FILENO, buffer, BUFSIZE) < 0){
+  if (read(STDIN_FILENO, buffer, BUFSIZE) < 0) {
     warn("%s", buffer);
   }
 }
@@ -25,7 +25,7 @@ int read_from_file(char *filename, bool check) {
   if (fd < 0) {
     warn("%s", filename);
     return 0;
-    //exit(1);
+    // exit(1);
   }
   sz = read(fd, c, BUFSIZE);
   if (sz < 0) {
@@ -34,11 +34,11 @@ int read_from_file(char *filename, bool check) {
   }
   c[sz] = '\0';
   int wr = write(STDOUT_FILENO, c, BUFSIZE);
-  if(wr < 0){
+  if (wr < 0) {
     warn("%s", filename);
     return 0;
   }
-  if(!check){
+  if (!check) {
     return 0;
   } else {
     return 1;
@@ -47,7 +47,8 @@ int read_from_file(char *filename, bool check) {
 
 int main(int argc, char *argv[]) {
   bool success = 1;
-  if (argc == 1 || (strcmp(argv[1], "-") == 0)) {  // no args, should read from stdin
+  if (argc == 1 ||
+      (strcmp(argv[1], "-") == 0)) {  // no args, should read from stdin
     read_from_stdin();
     return 0;
   } else {  // one or more args
@@ -70,7 +71,7 @@ int main(int argc, char *argv[]) {
       }
     }
   }
-  if(success == 1){
+  if (success == 1) {
     return EXIT_SUCCESS;
   }
   return EXIT_FAILURE;
