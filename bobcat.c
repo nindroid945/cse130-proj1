@@ -25,7 +25,6 @@ int read_from_file(char *filename, bool check) {
   if (fd < 0) {
     warn("%s", filename);
     return 0;
-    // exit(1);
   }
   sz = read(fd, c, BUFSIZE);
   if (sz < 0) {
@@ -33,7 +32,7 @@ int read_from_file(char *filename, bool check) {
     return 0;
   }
   c[sz] = '\0';
-  int wr = write(STDOUT_FILENO, c, BUFSIZE);
+  int wr = write(STDOUT_FILENO, c, sizeof(c));
   if (wr < 0) {
     warn("%s", filename);
     return 0;
