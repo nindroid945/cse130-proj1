@@ -26,13 +26,13 @@ int read_from_file(char *filename, bool check) {
     warn("%s", filename);
     return 0;
   }
-  sz = read(fd, c, BUFSIZE);
+  sz = read(fd, c, sizeof(c));
   if (sz < 0) {
     warn("%s", filename);
     return 0;
   }
   c[sz] = '\0';
-  int wr = write(STDOUT_FILENO, c, sizeof(c));
+  int wr = write(STDOUT_FILENO, c, sz * sizeof(char));
   if (wr < 0) {
     warn("%s", filename);
     return 0;
